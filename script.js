@@ -1,66 +1,82 @@
-const months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+let disBlock = document.getElementById("disBlock");
+let age = document.getElementById("age");
+let time = document.getElementById("time");
+let dobDate = document.getElementById("dobDate");
+let calcBtn = document.getElementById("calcBtn");
+let resetBtn = document.getElementById("resetBtn");
 
-function ageCalculate() {
-    let today = new Date();
-    let inputDate = new Date(document.getElementById("date-input").value);
-    let birthMonth, birthDate, birthYear;
-    let birthDetails = {
-        date: inputDate.getDate(),
-        month: inputDate.getMonth() + 1,
-        year: inputDate.getFullYear()
-    }
-    let currentYear = today.getFullYear();
-    let currentMonth = today.getMonth() + 1;
-    let currentDate = today.getDate();
+disBlock.style.display = 'none';
+let dob = new Date(), today = new Date()
 
-    leapChecker(currentYear);
 
-    if (
-        birthDetails.year > currentYear ||
-        (birthDetails.month > currentMonth && birthDetails.year == currentYear) ||
-        (birthDetails.date > currentDate && birthDetails.month == currentMonth && birthDetails.year == currentYear)
-    ) {
-        alert("Not Born Yet");
-        displayResult("-", "-", "-");
-        return;
-    }
+function samay() {
+    let d = new Date();
+    time.innerHTML = d.getHours() + " Hours, " + d.getMinutes() + " Minutes, and " + d.getSeconds() + " Seconds ⏳";
+}
+function calculate() {
+    disBlock.style.display = 'block';
+    let dobVal = dobDate.value;
+    dob = new Date(dobVal);
+    console.log(dob);
 
-    birthYear = currentYear - birthDetails.year;
-
-    if (currentMonth >= birthDetails.month) {
-        birthMonth = currentMonth - birthDetails.month;
-    }
-    else {
-        birthYear--;
-        birthMonth = 12 + currentMonth - birthDetails.month;
-    }
-
-    if (currentDate >= birthDetails.date) {
-        birthDate = currentDate - birthDetails.date;
-    }
-    else {
-        birthMonth--;
-        let days = months[currentMonth - 2];
-        birthDate = days + currentDate - birthDetails.date;
-        if (birthMonth < 0) {
-            birthMonth = 11;
-            birthYear--;
+    let year, month, day;
+    day = (function () {
+        if (today.getDate() > dob.getDate()) {
+            return today.getDate() - dob.getDate() - 1;
+        } else if (today.getDate() == dob.getDate()) {
+            return today.getDate() - dob.getDate();
+        } else {
+            let calDate = new Date(dob.getFullYear(), dob.getMonth() + 1, 0);
+            return (today.getDate() + calDate.getDate()) - dob.getDate() - 1;
         }
-    }
-    displayResult(birthDate, birthMonth, birthYear);
+    }());
+
+    month = (function () {
+        if (today.getMonth() >= dob.getMonth()) {
+            if (today.getDate() >= dob.getDate()) {
+                return today.getMonth() - dob.getMonth();
+            } else {
+                if ((today.getMonth() - 1) >= dob.getMonth()) {
+                    return (today.getMonth() - 1) - dob.getMonth();
+                } else {
+                    return ((today.getMonth() - 1) + 12) - dob.getMonth()
+                }
+            }
+        } else {
+            if (today.getDate() >= dob.getDate()) {
+                return (today.getMonth() + 12) + dob.getMonth();
+            } else {
+                return ((today.getMonth() - 1) + 12) - dob.getMonth()
+            }
+        }
+    }());
+
+    year = (function () {
+        if (dob.getMonth() == today.getMonth()) {
+            if (dob.getDate() > today.getDate()) {
+                return (today.getFullYear() - 1) - dob.getFullYear();
+            } else {
+                return today.getFullYear() - dob.getFullYear();
+            }
+        } else {
+            if (dob.getMonth() > today.getMonth()) {
+                return (today.getFullYear() - 1) - dob.getFullYear();
+            } else {
+                return today.getFullYear() - dob.getFullYear();
+            }
+        }
+    }());
+
+    age.innerHTML = "You are ⮞⮞⮞⮞ <br>" + year + " Year, " + month + " months, " + day + " days old.♕";
+    calTime = setInterval(samay, 1000);
+}
+calcBtn.onclick = calculate;
+
+function reset() {
+    age.innerHTML = "";
+    time.innerHTML = "";
+    clearInterval(calTime);
+    disBlock.style.display = "none"
 }
 
-function displayResult(bDate, bMonth, bYear) {
-    document.getElementById("years").textContent = bYear;
-    document.getElementById("months").textContent = bMonth;
-    document.getElementById("days").textContent = bDate;
-}
-
-function leapChecker(year) {
-    if (year % 4 == 0 || (year % 100 == 0 && year % 400 == 0)) {
-        months[1] = 29;
-    }
-    else {
-        months[1] = 28;
-    }
-}
+resetBtn.onclick = reset;

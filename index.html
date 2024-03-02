@@ -7,24 +7,17 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="inputs-wrapper">
-        <input type="date" id="date-input" />
-        <button onclick="ageCalculate()">Calculate</button>
+    <div class="age-calc">
+      <h1>Age Calculator</h1>
+      <div id="disBlock">
+        <div id="age"></div>
+        <div id="time"></div>
       </div>
-      <div class="outputs-wrapper">
-        <div>
-          <span id="years"> - </span>
-          <p>Years</p>
-        </div>
-        <div>
-          <span id="months"> - </span>
-          <p>Months</p>
-        </div>
-        <div>
-          <span id="days"> - </span>
-          <p>Days</p>
-        </div>
+      <div>
+        <label for="">Enter your date of Birth:📅</label>
+        <input type="date" id="dobDate" name="" /><br />
+        <button type="button" id="calcBtn">Calculate</button>
+        <button type="reset" id="resetBtn">Reset</button>
       </div>
     </div>
     <script src="script.js"></script>
